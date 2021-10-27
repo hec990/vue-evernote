@@ -6,20 +6,24 @@
           <div class="main"></div>
           <div class="form">
             <h3 @click="showAccount">创建账户</h3>
-            <div v-show="this.isShowAccount" class="register">
-              <input type="text" v-model="account.username" placeholder="用户名">
-              <input type="password" v-model="account.password" placeholder="密码">
-              <p v-bind:class="{error: account.isError}"> {{ account.notice }}</p>
-              <div class="button" @click="onAccount">创建账号</div>
-            </div>
+            <transition name="slide">
+              <div v-bind:class="{show: isShowAccount}" class="register">
+                <input type="text" v-model="account.username" placeholder="用户名">
+                <input type="password" v-model="account.password" placeholder="密码">
+                <p v-bind:class="{error: account.isError}"> {{ account.notice }}</p>
+                <div class="button" @click="onAccount">创建账号</div>
+              </div>
+            </transition>
 
             <h3 @click="showLogin">登录</h3>
-            <div v-show="this.isShowLogin" class="login">
-              <input type="text" v-model="login.username" placeholder="输入用户名">
-              <input type="password" v-model="login.password" placeholder="密码">
-              <p v-bind:class="{error: login.isError}"> {{ login.notice }}</p>
-              <div class="button" @click="onLogin"> 登录</div>
-            </div>
+            <transition name="slide">
+              <div v-bind:class="{show: isShowLogin}" class="login">
+                <input type="text" v-model="login.username" placeholder="输入用户名">
+                <input type="password" v-model="login.password" placeholder="密码">
+                <p v-bind:class="{error: login.isError}"> {{ login.notice }}</p>
+                <div class="button" @click="onLogin"> 登录</div>
+              </div>
+            </transition>
           </div>
         </div>
       </div>
@@ -128,9 +132,10 @@ export default {
     .form {
       width: 270px;
       border-left: 1px solid #ccc;
-
+      overflow: hidden;
       h3 {
         padding: 10px 20px;
+        margin-top: -1px;
         font-weight: normal;
         font-size: 16px;
         border-top: 1px solid #eee;
@@ -155,8 +160,15 @@ export default {
 
       .login, .register {
         padding: 10px 20px;
+        padding: 0 20px;
         border-top: 1px solid #eee;
+        height: 0;
+        overflow: hidden;
+        transition: height .4s;
 
+        &.show {
+          height: 193px;
+        }
         input {
           display: block;
           width: 100%;
