@@ -16,6 +16,7 @@ export default {
 
 
 <style lang="scss">
+$box-shadow: 0px;
 * {
   margin: 0;
   padding: 0;
@@ -50,7 +51,7 @@ ul, li {
   border: none;
   cursor: pointer;
   display: inline-block;
-  box-shadow: 0px 0px 2px 0px #ccc;
+  box-shadow: $box-shadow $box-shadow 2px $box-shadow #ccc;
 }
 
 #app {
