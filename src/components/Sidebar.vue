@@ -31,11 +31,14 @@
 
 <script>
 import Avatar from "@/components/Avatar";
+import request from "@/helpers/request";
 export default {
   components: {Avatar},
   methods:{
     onLogout(){
-
+       request('/auth/logout').then((data)=>{
+         console.log(data)
+       })
     }
   }
 }
