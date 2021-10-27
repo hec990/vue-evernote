@@ -1,5 +1,6 @@
 <template>
   <div id="sidebar">
+    <Avatar />
     <div class="icons">
       <router-link to="/note/1" title="笔记">
         <svg class="icon" aria-hidden="true">
@@ -29,7 +30,9 @@
 </template>
 
 <script>
+import Avatar from "@/components/Avatar";
 export default {
+  components: {Avatar},
   methods:{
     onLogout(){
 
