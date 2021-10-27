@@ -7,16 +7,18 @@
           <div class="form">
             <h3 @click="showAccount">创建账户</h3>
             <div v-show="this.isShowAccount" class="register">
-              <input type="text" placeholder="用户名">
-              <input type="password" placeholder="密码">
-              <div class="button">创建账号</div>
+              <input type="text" v-model="account.username" placeholder="用户名">
+              <input type="password" v-model="account.password" placeholder="密码">
+              <p v-bind:class="{error: account.isError}"> {{ account.notice }}</p>
+              <div class="button" @click="onAccount">创建账号</div>
             </div>
 
             <h3 @click="showLogin">登录</h3>
             <div v-show="this.isShowLogin" class="login">
-              <input type="text" placeholder="输入用户名">
-              <input type="password" placeholder="密码">
-              <div class="button"> 登录</div>
+              <input type="text" v-model="login.username" placeholder="输入用户名">
+              <input type="password" v-model="login.password" placeholder="密码">
+              <p v-bind:class="{error: login.isError}"> {{ login.notice }}</p>
+              <div class="button" @click="onLogin"> 登录</div>
             </div>
           </div>
         </div>
@@ -27,21 +29,62 @@
 
 <script lang="js">
 export default {
-  data(){
+  data() {
     return {
-      isShowAccount:false,
-      isShowLogin:true,
+      isShowAccount: false,
+      isShowLogin: true,
+      account: {
+        username: "",
+        password: "",
+        notice: "创建账户后，请记住用户名和密码",
+        isError: false
+      },
+      login: {
+        username: '',
+        password: "",
+        notice: "输入用户名和密码",
+        isError: false
+      },
     }
   },
-  methods:{
-    showAccount(){
+  methods: {
+    showAccount() {
       this.isShowAccount = true;
       this.isShowLogin = false
     },
-    showLogin(){
-      this.isShowAccount = false;
+    showLogin() {
       this.isShowLogin = true;
-    }
+      this.isShowAccount = false;
+    },
+    onAccount() {
+      if (!/^[\w\u4e00-\u9fa5]{3,15}$/.test(this.account.username)) {
+        this.account.isError = true
+        this.account.notice = '用户名3~15个字符，仅限于字母数字下划线中文'
+        return
+      }
+      if (!/^.{6,16}$/.test(this.account.password)) {
+        this.account.isError = true
+        this.account.notice = '密码长度为6~16个字符'
+        return
+      }
+      this.account.isError = false
+      this.account.notice = ''
+      console.log(`start register..., username: ${this.account.username} , password: ${this.account.password}`)
+    },
+    onLogin() {
+      if (!/^[\w\u4e00-\u9fa5]{3,15}$/.test(this.login.username)) {
+        this.login.isError = true
+        this.login.notice = '用户名3~15个字符，仅限于字母数字下划线中文'
+        return
+      }
+      if (!/^.{6,16}$/.test(this.login.password)) {
+        this.login.isError = true
+        this.login.notice = '密码长度为6~16个字符'
+        return
+      }
+      this.login.isError = false
+      this.login.notice = ''
+    },
   }
 }
 
@@ -59,10 +102,12 @@ export default {
   background-color: rgba(0, 0, 0, .7);
   display: table;
   transition: opacity .3s ease;
+
   .modal-wrapper {
     display: table-cell;
     vertical-align: middle;
   }
+
   .modal-container {
     width: 800px;
     height: 500px;
@@ -73,20 +118,24 @@ export default {
     transition: all .3s ease;
     font-family: Helvetica, Arial, sans-serif;
     display: flex;
+
     .main {
       flex: 1;
       background: #36bc64 url(//cloud.hunger-valley.com/17-12-13/38476998.jpg-middle) center center no-repeat;
       background-size: contain;
     }
+
     .form {
       width: 270px;
       border-left: 1px solid #ccc;
+
       h3 {
         padding: 10px 20px;
         font-weight: normal;
         font-size: 16px;
         border-top: 1px solid #eee;
         cursor: pointer;
+
         &:nth-of-type(2) {
           border-bottom: 1px solid #eee;
         }
