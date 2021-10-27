@@ -4,7 +4,7 @@ import Home from '../components/Home.vue'
 import Login from "../components/Login";
 import NotebookList from "@/components/NotebookList";
 import NoteDetail from "@/components/NoteDetail";
-import TashDetail from "@/components/TashDetail";
+import TrashDetail from "@/components/TrashDetail";
 
 Vue.use(VueRouter)
 
@@ -27,7 +27,7 @@ const routes = [
   },
   {
     path:"/trash/:noteId",
-    component: TashDetail
+    component: TrashDetail
   }
 ]
 
