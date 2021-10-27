@@ -32,6 +32,8 @@
 </template>
 
 <script lang="js">
+import request from "@/helpers/request";
+
 export default {
   data() {
     return {
@@ -73,7 +75,11 @@ export default {
       }
       this.account.isError = false
       this.account.notice = ''
-      console.log(`start register..., username: ${this.account.username} , password: ${this.account.password}`)
+      request('auth/register','POST',{
+        username:this.account.username,password:this.account.password
+      }).then((data)=>{
+        console.log(data)
+      })
     },
     onLogin() {
       if (!/^[\w\u4e00-\u9fa5]{3,15}$/.test(this.login.username)) {
@@ -88,6 +94,11 @@ export default {
       }
       this.login.isError = false
       this.login.notice = ''
+      request('auth/login','POST',{
+        username:this.login.username,password:this.login.password
+      }).then((data)=>{
+        console.log(data)
+      })
     },
   }
 }
