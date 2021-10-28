@@ -1,7 +1,7 @@
 <template>
   <div class="detail" id="notebook-list">
     <header>
-      <a href="#" class="btn">
+      <a href="#" class="btn" @click="onCreate">
         <svg class="icon">
           <use xlink:href="#icon-add"></use>
         </svg>
@@ -10,30 +10,18 @@
     </header>
     <main>
       <div class="layout">
-        <h3>笔记本列表(10)</h3>
+        <h3>笔记本列表({{notebooks.length}})</h3>
         <div class="book-list">
-          <a class="notebook">
+          <a class="notebook" v-for="(notebook,index) in notebooks" :key="index">
             <div>
               <svg class="icon">
                 <use xlink:href="#icon-bijiben_list"></use>
               </svg>
-              前端笔记
-              <span>10</span>
-              <span class="action">编辑</span>
-              <span class="action">删除</span>
-              <span class="date">刚刚</span>
-            </div>
-          </a>
-          <a class="notebook">
-            <div>
-              <svg class="icon">
-                <use xlink:href="#icon-bijiben_list"></use>
-              </svg>
-              学习笔记
-              <span>0</span>
-              <span class="action">编辑</span>
-              <span class="action">删除</span>
-              <span class="date">刚刚</span>
+              {{notebook.title}}
+              <span>{{notebook.noteCounts}}</span>
+              <span class="action" @click="onEdit(notebook)">编辑</span>
+              <span class="action" @click="onDelete(notebook)">删除</span>
+              <span class="date">{{notebook.friendlyCreatedAt}}</span>
             </div>
           </a>
         </div>
@@ -42,14 +30,16 @@
   </div>
 </template>
 
-<script>
+<script lang="js">
 import Auth from '@/apis/auth'
+import Notebooks from "@/apis/NoteBookList";
+import {friendlyDate} from '@/helpers/util'
 
 export default {
   name: 'Login',
   data() {
     return {
-      msg: '笔记本列表'
+      notebooks:[]
     }
   },
   created() {
@@ -59,6 +49,46 @@ export default {
             this.$router.push({path: "login"})
           }
         })
+    // 获取笔记本列表数据
+    Notebooks.getAll().then(res =>{
+      this.notebooks = res.data;
+    })
+  },
+  methods:{
+    onCreate(){
+      let title = window.prompt('创建笔记本')
+      if(title.trim() === '') {
+        alert('笔记本名不能为空')
+        return
+      }
+      Notebooks.addNotebook({ title })
+          .then(res => {
+            console.log(res)
+            res.data.friendlyCreatedAt = friendlyDate(res.data.createdAt)
+            this.notebooks.unshift(res.data)
+            alert(res.msg)
+          })
+    },
+    onEdit(notebook){
+      let title = window.prompt('修改笔记本名称',notebook.title)
+      Notebooks.updateNotebook(notebook.id,{title})
+      .then(res=>{
+        notebook.title = title;
+        console.log(res.msg)
+      })
+
+    },
+    onDelete(notebook){
+      let isConfirm = window.confirm(`你确定要删除吗?`)
+      if(isConfirm){
+        Notebooks.deleteNotebook(notebook.id)
+            .then(res=>{
+              // 删除当前笔记
+              this.notebooks.splice(this.notebooks.indexOf(notebook), 1)
+              alert(res.msg)
+            })
+      }
+    }
   }
 }
 </script>
