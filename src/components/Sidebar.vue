@@ -20,7 +20,6 @@
         </svg>
       </router-link>
     </div>
-
     <div class="logout" @click="onLogout">
       <svg class="icon" aria-hidden="true">
         <use xlink:href="#icon-tuichu"></use>
@@ -36,7 +35,11 @@ export default {
   components: {Avatar},
   methods:{
     onLogout(){
-      Auth.logout().then(data=>{console.log(data)})
+      Auth.logout()
+      .then(data=>{
+        console.log(data);
+        this.$router.push({path:"login"})
+      })
     }
   }
 }
