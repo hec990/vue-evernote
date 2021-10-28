@@ -9,6 +9,7 @@ const URL = {
 }
 
 export default {
+    // 获取所有笔记本列表数据
     getAll() {
         return new Promise((resolve, reject) => {
             request(URL.GET)
@@ -24,14 +25,17 @@ export default {
         })
     },
 
+    // 编辑
     updateNotebook(notebookId, { title = '' } = { title: '' }) {
         return request(URL.UPDATE.replace(':id', notebookId), 'PATCH', { title })
     },
 
+    // 删除
     deleteNotebook(notebookId) {
         return request(URL.DELETE.replace(':id', notebookId), 'DELETE')
     },
 
+    // 添加
     addNotebook({ title = ''} = { title: ''}) {
         return request(URL.ADD, 'POST', { title })
     }
