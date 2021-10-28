@@ -32,7 +32,7 @@
 </template>
 
 <script lang="js">
-import request from "@/helpers/request";
+import Auth from '@/apis/auth'
 
 export default {
   data() {
@@ -75,9 +75,10 @@ export default {
       }
       this.account.isError = false
       this.account.notice = ''
-      request('auth/register','POST',{
-        username:this.account.username,password:this.account.password
-      }).then((data)=>{
+      Auth.register({
+        username:this.account.username,
+        password:this.account.password
+      }).then(data=>{
         console.log(data)
       })
     },
@@ -94,9 +95,10 @@ export default {
       }
       this.login.isError = false
       this.login.notice = ''
-      request('auth/login','POST',{
-        username:this.login.username,password:this.login.password
-      }).then((data)=>{
+      Auth.login({
+        username:this.login.username,
+        password:this.login.password
+      }).then(data=>{
         console.log(data)
       })
     },
