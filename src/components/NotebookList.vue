@@ -101,8 +101,6 @@ export default {
       }).then((res)=>{
         this.notebooks.splice(this.notebooks.indexOf(notebook), 1)
         this.$message.success(res.msg)
-      }).catch(()=>{
-        this.$message.error("取消删除")
       })
     }
   }
