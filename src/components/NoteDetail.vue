@@ -18,7 +18,7 @@ export default {
     Auth.getInfo()
         .then(res => {
           if(!res.isLogin){
-            this.$router.push({path: "login"})
+            this.$router.push({path: "/login"})
           }
         })
   }
