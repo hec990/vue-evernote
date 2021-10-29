@@ -1,10 +1,9 @@
 <template>
   <div id="trash-detail">
-    <h1>{{ msg }} : {{ $route.params.noteId }}</h1>
   </div>
 </template>
 
-<script>
+<script lang="js">
 import Auth from "@/apis/auth";
 
 export default {

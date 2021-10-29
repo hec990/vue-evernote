@@ -1,8 +1,7 @@
 <template>
-   <div>
-     home
-   </div>
+  <div class="home"></div>
 </template>
+
 
 <script lang="ts">
 export default {
