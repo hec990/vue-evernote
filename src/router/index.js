@@ -1,17 +1,16 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../components/Home.vue'
 import Login from "../components/Login";
-import NotebookList from "@/components/NotebookList";
-import NoteDetail from "@/components/NoteDetail";
-import TrashDetail from "@/components/TrashDetail";
+import NotebookList from "../components/NotebookList";
+import NoteDetail from "../components/NoteDetail";
+import TrashDetail from "../components/TrashDetail";
 
 Vue.use(VueRouter)
 
 const routes = [
   {
     path: '/',
-    component: Home
+    component: Login
   },
   {
     path:'/login',
