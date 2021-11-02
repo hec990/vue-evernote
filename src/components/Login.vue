@@ -32,7 +32,7 @@
 </template>
 
 <script lang="js">
-import Auth from '@/apis/auth'
+import {mapActions} from 'vuex'
 
 export default {
   data() {
@@ -54,6 +54,10 @@ export default {
     }
   },
   methods: {
+    ...mapActions({
+      loginUser:"login",
+      registerUser:'register'
+    }),
     showAccount() {
       this.isShowAccount = true;
       this.isShowLogin = false
@@ -73,11 +77,10 @@ export default {
         this.account.notice = '密码长度为6~16个字符'
         return
       }
-      Auth.register({
+      this.registerUser({
         username: this.account.username,
         password: this.account.password
-      }).then(data => {
-        console.log(data);
+      }).then(() => {
         this.account.isError = false
         this.account.notice = ''
         this.$router.push({path: 'notebooks'})
@@ -98,11 +101,10 @@ export default {
         return
       }
 
-      Auth.login({
+      this.loginUser({
         username: this.login.username,
         password: this.login.password
-      }).then(data => {
-        console.log(data);
+      }).then(()=> {
         this.login.isError = false
         this.login.notice = ''
         this.$router.push({path: 'notebooks'})

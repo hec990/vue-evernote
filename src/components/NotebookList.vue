@@ -30,7 +30,6 @@
 </template>
 
 <script lang="js">
-import Auth from '../apis/auth'
 import {mapGetters,mapActions} from 'vuex'
 export default {
   data() {
@@ -38,20 +37,16 @@ export default {
     }
   },
   created() {
-    Auth.getInfo()
-        .then(res => {
-          if (!res.isLogin) {
-            this.$router.push({path: "login"})
-          }
-        })
+    // 检查用户是否为登录状态
+    this.checkLogin({path: "login"})
     // 获取笔记本列表所有数据
-    this.$store.dispatch('getNotebooks')
+    this.getNotebooks()
   },
   computed:{
     ...mapGetters(['notebooks'])
   },
   methods:{
-    ...mapActions(['getNotebooks','addNotebook','updateNotebook','deleteNotebook']),
+    ...mapActions(['getNotebooks','addNotebook','updateNotebook','deleteNotebook','checkLogin']),
     onCreate() {
       this.$prompt('输入新笔记本标题', '创建笔记本', {
         confirmButtonText: '确定',
