@@ -29,16 +29,16 @@
 </template>
 
 <script>
-import Avatar from "@/components/Avatar";
-import Auth from '@/apis/auth'
+import Avatar from "./Avatar";
+import Auth from '../apis/auth'
 export default {
   components: {Avatar},
   methods:{
     onLogout(){
       Auth.logout()
-      .then(data=>{
-        console.log(data);
+      .then(()=>{
         this.$router.push({path:"login"})
+        this.$message.success("注销成功")
       })
     }
   }
