@@ -12,7 +12,7 @@
             <svg class="icon" @click="isShowPreview = !isShowPreview">
                 <use xlink:href="#icon-xianshi"></use>
             </svg>
-          <svg class="icon" @click="deleteNote">
+          <svg class="icon" @click="onDeleteNote">
             <use xlink:href="#icon-lajitong"></use>
           </svg>
           </span>
@@ -20,7 +20,7 @@
         <div class="note-title">
           <input type="text"
                  v-model="curNote.title"
-                 @input="updateNote"
+                 @input="onUpdateNote"
                  @keydown="statusText='正在输入...'"
                  placeholder="输入标题" />
         </div>
@@ -28,7 +28,7 @@
           <textarea
               v-show="!isShowPreview"
               v-model="curNote.content"
-              @input="updateNote"
+              @input="onUpdateNote"
               @keydown="statusText='正在输入...'"
               placeholder="输入内容, 支持 markdown 语法">
           </textarea>
@@ -46,10 +46,9 @@
 <script lang="js">
 import Auth from '../apis/auth'
 import NoteSidebar from '../components/NoteSidebar'
-import Bus from '../helpers/bus'
 import _ from 'lodash'
-import Notes from '../apis/notes'
 import MarkdownIt from 'markdown-it'
+import {mapGetters, mapActions, mapMutations} from 'vuex'
 
 let md = new MarkdownIt()
 
@@ -61,8 +60,6 @@ export default {
 
   data() {
     return {
-      curNote: {},
-      notes: [],
       statusText: '笔记未改动',
       isShowPreview: false
     }
@@ -74,43 +71,48 @@ export default {
             this.$router.push({path: '/login'})
           }
         })
-    Bus.$once('update:notes', val => {
-      this.curNote = val.find(note => note.id === this.$route.query.noteId) || {}
-    })
   },
   computed: {
+    ...mapGetters([
+        'notes',
+        'curNote'
+    ]),
+
     previewContent() {
       console.log(this.curNote.content || '')
       return md.render(this.curNote.content || '')
     }
   },
   methods: {
+    ...mapMutations([
+        'setCurNote'
+    ]),
+    ...mapActions([
+        'updateNote',
+        'deleteNote'
+    ]),
+
     // _.debounce  ==> lodash 节流函数
     // 防止用户输入过快，不停请求
-    updateNote: _.debounce(function () {
-      Notes.updateNote({noteId: this.curNote.id},
-          {title: this.curNote.title, content: this.curNote.content})
+    onUpdateNote: _.debounce(function () {
+      this.updateNote({ noteId: this.curNote.id, title: this.curNote.title, content: this.curNote.content })
           .then(() => {
             this.statusText = '已保存'
           }).catch(() => {
-        this.statusText = '保存失败'
+        this.statusText = '保存出错'
       })
-
     }, 300),
-
-    deleteNote() {
-      Notes.deleteNote({noteId: this.curNote.id})
-          .then(data => {
-            this.$message.success(data.msg)
-            this.notes.splice(this.notes.indexOf(this.curNote), 1)
-            this.$router.replace({path: '/note'})
+    onDeleteNote() {
+      this.deleteNote({ noteId: this.curNote.id })
+          .then(() => {
+            this.$router.replace({ path: '/note' })
           })
     }
 
   },
-
+  // 当用户的路由切换的时候
   beforeRouteUpdate(to, from, next) {
-    this.curNote = this.notes.find(note => note.id == to.query.noteId) || {}
+    this.setCurNote({ curNoteId: to.query.noteId})
     next()
   }
 }
