@@ -21,6 +21,7 @@
               <span>{{notebook.noteCounts}}</span>
               <span class="action" @click.prevent="onEdit(notebook)">编辑</span>
               <span class="action" @click.prevent="onDelete(notebook)">删除</span>
+              <span class="date">{{notebook.createdAtFriendly}}</span>
             </div>
           </router-link>
         </div>
@@ -85,8 +86,8 @@ export default {
 
 <style lang="scss" scoped>
 svg {
-  width: 16px;
-  height: 16px;
+  width: 14px;
+  height: 14px;
 }
 #notebook-list {
   flex: 1;
