@@ -31,7 +31,6 @@
 
 <script lang="js">
 import Auth from '../apis/auth'
-// import {friendlyDate} from '../helpers/util'
 import {mapGetters,mapActions} from 'vuex'
 export default {
   data() {

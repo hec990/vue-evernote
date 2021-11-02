@@ -2,11 +2,17 @@ import Notebook from '../../apis/NoteBookList'
 import {Message} from "element-ui";
 
 const state = {
-    notebooks: [],
+    notebooks: null,
+    curBookId:null
 }
 
 const getters = {
     notebooks: state => state.notebooks || [],
+    curBook: state => {
+        if(!Array.isArray(state.notebooks)) return {}
+        if(!state.curBookId) return state.notebooks[0] || {}
+        return state.notebooks.find(notebook => notebook.id == state.curBookId) || {}
+    }
 }
 
 const mutations = {
@@ -26,6 +32,9 @@ const mutations = {
     deleteNotebook(state, payload) {
         state.notebooks = state.notebooks.filter(notebook => notebook.id != payload.notebookId)
     },
+    setCurBook(state, payload) {
+        state.curBookId = payload.curBookId
+    }
 }
 
 const actions = {
