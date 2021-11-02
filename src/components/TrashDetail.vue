@@ -24,7 +24,7 @@
           <a class="btn action" @click="onDelete">彻底删除</a>
       </div>
       <div class="note-title">
-        <span>{{ curTrashNote.title }}</span>
+        <span>{{ trashNotes.title }}</span>
       </div>
       <div class="editor">
         <div class="preview markdown-body" v-html="compiledMarkdown"></div>
@@ -35,6 +35,7 @@
 
 <script lang="js">
 import Auth from "../apis/auth";
+import Trash from "../apis/trash"
 import MarkdownIt from 'markdown-it'
 let md = new MarkdownIt()
 
@@ -42,21 +43,7 @@ export default {
   data() {
     return {
       msg: '回收站',
-      trashNotes: [
-        {
-          id: 6,
-          title: "我的笔记2",
-          content: "## hello",
-          createdAtFriendly: "1小时前",
-          updatedAtFriendly: "刚刚"
-        }, {
-          id: 3,
-          title: "我的笔记3",
-          content: "## hello",
-          createdAtFriendly: "1小时前",
-          updatedAtFriendly: "刚刚"
-        }
-      ],
+      trashNotes: [],
       curTrashNote: {
         id: 3,
         title: "我的笔记3",
@@ -73,6 +60,11 @@ export default {
             this.$router.push({path: "login"})
           }
         })
+  // 获取回收站笔记列表
+    Trash.getAll()
+         .then(res=>{
+           this.trashNotes = res.data;
+         })
   },
   methods: {
     onRevert() {
