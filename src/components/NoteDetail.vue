@@ -57,7 +57,6 @@ export default {
   components: {
     NoteSidebar
   },
-
   data() {
     return {
       statusText: '笔记未改动',

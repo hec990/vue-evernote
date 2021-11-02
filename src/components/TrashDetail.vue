@@ -20,11 +20,13 @@
         <span> 创建日期: {{ curTrashNote.createdAtFriendly }}</span>
         <span> | </span>
         <span> 更新日期: {{ curTrashNote.updatedAtFriendly }}</span>
-          <a class="btn action" @click="onRevert">恢复</a>
-          <a class="btn action" @click="onDelete">彻底删除</a>
+        <span> | </span>
+        <span> 所属笔记本: {{ belongTo }}</span>
+        <a class="btn action" @click="onRevert">恢复</a>
+        <a class="btn action" @click="onDelete">彻底删除</a>
       </div>
       <div class="note-title">
-        <span>{{ trashNotes.title }}</span>
+        <span>{{ curTrashNote.title }}</span>
       </div>
       <div class="editor">
         <div class="preview markdown-body" v-html="compiledMarkdown"></div>
@@ -34,51 +36,44 @@
 </template>
 
 <script lang="js">
-import Auth from "../apis/auth";
-import Trash from "../apis/trash"
 import MarkdownIt from 'markdown-it'
+import {mapGetters, mapActions, mapMutations} from 'vuex'
+
 let md = new MarkdownIt()
 
 export default {
   data() {
-    return {
-      msg: '回收站',
-      trashNotes: [],
-      curTrashNote: {
-        id: 3,
-        title: "我的笔记3",
-        content: "## hello",
-        createdAtFriendly: "1小时前",
-        updatedAtFriendly: "刚刚"
-      },
-    }
+    return {}
   },
   created() {
-    Auth.getInfo()
-        .then(res => {
-          if (!res.isLogin) {
-            this.$router.push({path: "login"})
-          }
+    this.checkLogin({path: "/login"})
+    this.getNotebooks()
+    this.getTrashNotes()
+        .then(() => {
+          this.setCurTrashNote({curTrashNoteId: this.$route.query.noteId})
         })
-  // 获取回收站笔记列表
-    Trash.getAll()
-         .then(res=>{
-           this.trashNotes = res.data;
-         })
   },
   methods: {
-    onRevert() {
-      console.log("revert")
-    },
+    ...mapMutations(['setCurTrashNote']),
+    ...mapActions(['checkLogin', 'deleteTrashNote', 'getTrashNotes', "revertTrashNote", "getNotebooks"]),
     onDelete() {
-      console.log("delete")
+      this.deleteTrashNote({noteId: this.curTrashNote.id})
+    },
+    onRevert() {
+      this.revertTrashNote({noteId: this.curTrashNote.id})
     },
   },
   computed: {
+    ...mapGetters(['trashNotes', 'curTrashNote', 'belongTo']),
     compiledMarkdown() {
       return md.render(this.curTrashNote.content || "")
     }
   },
+  // 当用户的路由切换的时候
+  beforeRouteUpdate(to, from, next) {
+    this.setCurTrashNote({curTrashNoteId: to.query.noteId})
+    next()
+  }
 }
 </script>
 
