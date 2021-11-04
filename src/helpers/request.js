@@ -2,7 +2,7 @@ import axios from 'axios'
 import {Message} from "element-ui";
 
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
-axios.defaults.baseURL = "//note-server.hunger-valley.com"
+axios.defaults.baseURL = "https://note-server.hunger-valley.com"
 // 跨域请求数据，携带cookie（用于知道登录状态）
 axios.defaults.withCredentials = true
 

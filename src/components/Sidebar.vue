@@ -37,7 +37,7 @@ export default {
     onLogout(){
       Auth.logout()
       .then(()=>{
-        this.$router.push({path:"login"})
+        this.$router.push({path:"/login"})
         this.$message.success("注销成功")
       })
     }
