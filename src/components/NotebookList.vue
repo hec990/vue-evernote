@@ -31,15 +31,15 @@
 </template>
 
 <script lang="js">
+import Notebooks from '../apis/NoteBookList'
 import {mapGetters,mapActions} from 'vuex'
 export default {
   data() {
-    return {
-    }
+    return {}
   },
   created() {
     // 检查用户是否为登录状态
-    this.checkLogin({path: "login"})
+    this.checkLogin({path: "/login"})
     // 获取笔记本列表所有数据
     this.getNotebooks()
   },
@@ -47,16 +47,18 @@ export default {
     ...mapGetters(['notebooks'])
   },
   methods:{
-    ...mapActions(['getNotebooks','addNotebook','updateNotebook','deleteNotebook','checkLogin']),
+    ...mapActions(['getNotebooks','updateNotebook','deleteNotebook','checkLogin']),
     onCreate() {
-      this.$prompt('输入新笔记本标题', '创建笔记本', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        inputPattern: /^.{1,30}$/,
-        inputErrorMessage: '标题不能为空，且不超过30个字符'
-      }).then(({value}) => {
-        this.addNotebook({title:value})
-      })
+      let title = window.prompt('创建笔记本')
+      if(title.trim() === '') {
+        alert('笔记本名不能为空')
+        return
+      }
+      Notebooks.addNotebook({ title })
+          .then(res => {
+            this.notebooks.unshift(res.data)
+            alert(res.msg)
+          })
     },
     onEdit(notebook){
       let title = ''
