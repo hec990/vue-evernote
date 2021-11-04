@@ -47,6 +47,7 @@ const actions = {
     addNotebook({ commit }, payload) {
         return Notebook.addNotebook({ title: payload.title })
             .then(res => {
+                console.log('add success...', res)
                 commit('addNotebook', { notebook: res.data })
                 Message.success(res.msg)
             })
